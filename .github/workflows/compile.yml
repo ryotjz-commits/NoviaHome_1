@@ -11,11 +11,21 @@ jobs:
       - name: Setup Arduino CLI
         uses: arduino/setup-arduino-cli@v2
 
-      - name: Install ESP32 Core + Libraries
+      - name: Install ESP32 Core 3.x
         run: |
           arduino-cli core update-index
-          arduino-cli core install esp32:esp32
-          arduino-cli lib install "ESPAsyncWebServer" "AsyncTCP" "Blynk" "ArduinoJson"
+          arduino-cli core install esp32:esp32@2.0.17
+
+      - name: Install Libraries - VERSI BARU
+        run: |
+          # Hapus versi lama kalau ada
+          arduino-cli lib uninstall "ESPAsyncWebServer" || true
+          arduino-cli lib uninstall "AsyncTCP" || true
+          
+          # Install dari 【entity-GitHub¦canonical_name=GitHub】 langsung, versi yang support Core 3.x
+          arduino-cli lib install --git-url https://github.com/ESP32Async/ESPAsyncWebServer.git
+          arduino-cli lib install --git-url https://github.com/ESP32Async/AsyncTCP.git
+          arduino-cli lib install "Blynk" "ArduinoJson"
 
       - name: Compile Sketch
         run: |
@@ -25,4 +35,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: NoviaHome-firmware
-          path: noviaHome/build/**/*.bin
+          path: build/**/*.bin
