@@ -14,17 +14,20 @@ jobs:
       - name: Install ESP32 Core 3.x
         run: |
           arduino-cli core update-index
-          arduino-cli core install esp32:esp32@2.0.17
+          arduino-cli core install esp32:esp32
 
-      - name: Install Libraries - VERSI BARU
+      - name: Install Libraries - Cara git clone
         run: |
-          # Hapus versi lama kalau ada
-          arduino-cli lib uninstall "ESPAsyncWebServer" || true
-          arduino-cli lib uninstall "AsyncTCP" || true
+          mkdir -p ~/Arduino/libraries
+          # Hapus dulu kalau ada sisa yang lama
+          rm -rf ~/Arduino/libraries/ESPAsyncWebServer
+          rm -rf ~/Arduino/libraries/AsyncTCP
           
-          # Install dari 【entity-GitHub¦canonical_name=GitHub】 langsung, versi yang support Core 3.x
-          arduino-cli lib install --git-url https://github.com/ESP32Async/ESPAsyncWebServer.git
-          arduino-cli lib install --git-url https://github.com/ESP32Async/AsyncTCP.git
+          # Clone versi baru yang support Core 3.x
+          git clone https://github.com/ESP32Async/ESPAsyncWebServer.git ~/Arduino/libraries/ESPAsyncWebServer
+          git clone https://github.com/ESP32Async/AsyncTCP.git ~/Arduino/libraries/AsyncTCP
+          
+          # Library lain tetep dari Library Manager
           arduino-cli lib install "Blynk" "ArduinoJson"
 
       - name: Compile Sketch
