@@ -1,0 +1,28 @@
+name: Compile Novia Home
+
+on: [push, pull_request]
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Arduino CLI
+        uses: arduino/setup-arduino-cli@v2
+
+      - name: Install ESP32 Core + Libraries
+        run: |
+          arduino-cli core update-index
+          arduino-cli core install esp32:esp32
+          arduino-cli lib install "ESPAsyncWebServer" "AsyncTCP" "Blynk" "ArduinoJson"
+
+      - name: Compile Sketch
+        run: |
+          arduino-cli compile --fqbn esp32:esp32:esp32 ./noviaHome/noviaHome.ino
+
+      - name: Upload Firmware
+        uses: actions/upload-artifact@v4
+        with:
+          name: NoviaHome-firmware
+          path: noviaHome/build/**/*.bin
