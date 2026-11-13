@@ -32,10 +32,10 @@ jobs:
 
       - name: Compile Sketch
         run: |
-          arduino-cli compile --fqbn esp32:esp32:esp32 ./noviaHome/noviaHome.ino
+          arduino-cli compile --fqbn esp32:esp32:esp32 --output-dir ./firmware ./noviaHome/noviaHome.ino
 
       - name: Upload Firmware
         uses: actions/upload-artifact@v4
         with:
           name: NoviaHome-firmware
-          path: build/**/*.bin
+          path: firmware/
